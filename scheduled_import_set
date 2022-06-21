@@ -1,0 +1,19 @@
+//this will create an entry in the sys_trigger table to kick off he scheduled import set
+
+
+import_data();
+
+function import_data() {
+    var di = new GlideRecord('scheduled_import_set');
+    di.addQuery(SYSID);//PUT THE SYS_ID OF THE SCHEDULED IMPORT HERE
+    di.query();
+    while (di.next()) {
+        if (typeof SncTriggerSynchronizer != 'undefined') {
+            SncTriggerSynchronizer.executeNow(di);
+			
+        } else {
+            Packages.com.snc.automation.TriggerSynchronizer.executeNow(di);
+			
+        }
+    }
+}
